@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Context } from "../context";
 
 const TodoItem = ({ id, title, checked }) => {
-  const { deleteItem, checkHandler } = useContext(Context);
+  const { dispatch } = useContext(Context);
 
   const classList = ["todo"];
 
@@ -16,11 +16,24 @@ const TodoItem = ({ id, title, checked }) => {
         <input
           type="checkbox"
           checked={checked}
-          onChange={() => checkHandler(id)}
+          onChange={() =>
+            dispatch({
+              type: "checkToggle",
+              payload: id,
+            })
+          }
         />
         <span>{title}</span>
 
-        <i className="material-icons red-text" onClick={() => deleteItem(id)}>
+        <i
+          className="material-icons red-text"
+          onClick={() =>
+            dispatch({
+              type: "remove",
+              payload: id,
+            })
+          }
+        >
           delete
         </i>
       </label>

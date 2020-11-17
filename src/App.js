@@ -1,61 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import TodoList from "./todoList/todoList";
 import "./App.css";
 
 import { Context } from "./context";
+import Reducer from "./reducer";
+import reducer from "./reducer";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [state, dispatch] = useReducer(
+    reducer,
+    JSON.parse(localStorage.getItem("todos"))
+  );
 
   const [newTask, setNewTask] = useState("");
 
   useEffect(() => {
-    const raw = localStorage.getItem("todos") || [];
-    setTodos(JSON.parse(raw));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos), [todos]);
+    localStorage.setItem("todos", JSON.stringify(state), [state]);
   });
 
   const addItemHandler = (e) => {
     if (e.key === "Enter") {
-      setTodos([
-        ...todos,
-        {
-          id: Date.now(),
-          title: newTask,
-          checked: false,
-        },
-      ]);
+      dispatch({
+        type: "add",
+        payload: newTask,
+      });
       setNewTask("");
     }
   };
 
-  const deleteItem = (id) => {
-    setTodos(
-      todos.filter((item) => {
-        return item.id !== id;
-      })
-    );
-  };
+  // const deleteItem = (id) => {
+  //   setTodos(
+  //     todos.filter((item) => {
+  //       return item.id !== id;
+  //     })
+  //   );
+  // };
 
-  const checkHandler = (id) => {
-    setTodos(
-      todos.map((item) => {
-        if (item.id === id) {
-          item.checked = !item.checked;
-        }
-        return item;
-      })
-    );
-  };
+  // const checkHandler = (id) => {
+  //   setTodos(
+  //     todos.map((item) => {
+  //       if (item.id === id) {
+  //         item.checked = !item.checked;
+  //       }
+  //       return item;
+  //     })
+  //   );
+  // };
 
   return (
     <Context.Provider
       value={{
-        deleteItem,
-        checkHandler,
+        dispatch,
       }}
     >
       <div className="container">
@@ -74,7 +69,7 @@ function App() {
             onKeyPress={addItemHandler}
           />
         </div>
-        <TodoList todos={todos} />
+        <TodoList todos={state} />
       </div>
     </Context.Provider>
   );
