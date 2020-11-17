@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { Context } from "../context";
 
 const TodoItem = ({ id, title, checked }) => {
-  const [completed, setComplited] = useState(checked);
+  const { deleteItem, checkHandler } = useContext(Context);
 
   const classList = ["todo"];
 
-  if (completed) {
+  if (checked) {
     classList.push("completed");
   }
 
@@ -14,12 +15,14 @@ const TodoItem = ({ id, title, checked }) => {
       <label>
         <input
           type="checkbox"
-          checked={completed}
-          onChange={() => setComplited(!completed)}
+          checked={checked}
+          onChange={() => checkHandler(id)}
         />
         <span>{title}</span>
 
-        <i className="material-icons red-text">delete</i>
+        <i className="material-icons red-text" onClick={() => deleteItem(id)}>
+          delete
+        </i>
       </label>
     </li>
   );

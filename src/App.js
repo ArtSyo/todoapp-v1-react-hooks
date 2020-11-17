@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import TodoList from "./todoList/todoList";
 import "./App.css";
 
+import { Context } from "./context";
+
 function App() {
   const [todos, setTodos] = useState([]);
 
@@ -30,25 +32,51 @@ function App() {
     }
   };
 
+  const deleteItem = (id) => {
+    setTodos(
+      todos.filter((item) => {
+        return item.id !== id;
+      })
+    );
+  };
+
+  const checkHandler = (id) => {
+    setTodos(
+      todos.map((item) => {
+        if (item.id === id) {
+          item.checked = !item.checked;
+        }
+        return item;
+      })
+    );
+  };
+
   return (
-    <div className="container">
-      <h1>
-        <b>Todo App</b> to do more.
-      </h1>
-      <div className="input-field">
-        <label htmlFor="mainInput">Your Task:</label>
-        <input
-          type="text"
-          name="mainInput"
-          value={newTask}
-          onChange={(event) => {
-            setNewTask(event.target.value);
-          }}
-          onKeyPress={addItemHandler}
-        />
+    <Context.Provider
+      value={{
+        deleteItem,
+        checkHandler,
+      }}
+    >
+      <div className="container">
+        <h1>
+          <b>Todo App</b> to do more.
+        </h1>
+        <div className="input-field">
+          <label htmlFor="mainInput">Your Task:</label>
+          <input
+            type="text"
+            name="mainInput"
+            value={newTask}
+            onChange={(event) => {
+              setNewTask(event.target.value);
+            }}
+            onKeyPress={addItemHandler}
+          />
+        </div>
+        <TodoList todos={todos} />
       </div>
-      <TodoList todos={todos} />
-    </div>
+    </Context.Provider>
   );
 }
 
