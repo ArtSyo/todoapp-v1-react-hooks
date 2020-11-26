@@ -1,7 +1,3 @@
-// import TodoItem from "./todoItem/TodoItem";
-
-// const initialState = [{}];
-
 export default function (state, action) {
   switch (action.type) {
     case 'add':
