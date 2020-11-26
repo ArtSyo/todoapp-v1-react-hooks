@@ -1,51 +1,31 @@
-import React, { useState, useEffect, useReducer } from "react";
-import TodoList from "./todoList/todoList";
-import "./App.css";
+import React, { useState, useEffect, useReducer } from 'react';
+import TodoList from './todoList/todoList';
+import './App.css';
 
-import { Context } from "./context";
-import Reducer from "./reducer";
-import reducer from "./reducer";
+import { Context } from './context';
+import reducer from './reducer';
 
 function App() {
   const [state, dispatch] = useReducer(
     reducer,
-    JSON.parse(localStorage.getItem("todos"))
+    JSON.parse(localStorage.getItem('todos'))
   );
 
-  const [newTask, setNewTask] = useState("");
+  const [newTask, setNewTask] = useState('');
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(state), [state]);
+    localStorage.setItem('todos', JSON.stringify(state), [state]);
   });
 
   const addItemHandler = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter' && e.target.value.length >= 1) {
       dispatch({
-        type: "add",
+        type: 'add',
         payload: newTask,
       });
-      setNewTask("");
+      setNewTask('');
     }
   };
-
-  // const deleteItem = (id) => {
-  //   setTodos(
-  //     todos.filter((item) => {
-  //       return item.id !== id;
-  //     })
-  //   );
-  // };
-
-  // const checkHandler = (id) => {
-  //   setTodos(
-  //     todos.map((item) => {
-  //       if (item.id === id) {
-  //         item.checked = !item.checked;
-  //       }
-  //       return item;
-  //     })
-  //   );
-  // };
 
   return (
     <Context.Provider
